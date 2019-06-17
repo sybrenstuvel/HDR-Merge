@@ -55,7 +55,7 @@ def get_exe_paths() -> dict:
             if not path:
                 error = missing_json_error  + ' (%s is empty)' % key
                 break
-            if not pathlib.Path(path).exists():
+            if key.endswith('_exe') and not pathlib.Path(path).exists():
                 error = "\"%s\" in exe_paths.json either doesn't exist or is an invalid path." % path
     if error:
         print (error)
@@ -158,10 +158,11 @@ class HDRBrackets(Frame):
         r1.pack(fill=X, pady=(padding, 0))
         r2 = Frame(master=self)
 
+        pattern = EXE_PATHS.get('default_pattern', '.tif')
         lbl_pattern = Label(r2, text="Matching Pattern:")
         lbl_pattern.pack(side=LEFT, padx=(padding, 0))
-        self.extension = Entry(r2, width=6)
-        self.extension.insert(0, ".tif")
+        self.extension = Entry(r2, width=len(pattern) + 2)
+        self.extension.insert(0, pattern)
         self.extension.pack(side=LEFT, padx=(padding/2, 0))
         self.buttons_to_disable.append(self.extension)
 
